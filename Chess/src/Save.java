@@ -1,4 +1,4 @@
-package chess.take3.game;
+
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -12,6 +12,7 @@ public class Save {
 	private Piece board[][];
 	private int turn;
 	private BufferedWriter write;
+	@SuppressWarnings("unused")
 	private File file, dir;
 
 	public Save(Piece _board[][], int _turn) {

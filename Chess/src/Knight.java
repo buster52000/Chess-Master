@@ -1,4 +1,4 @@
-package chess.take3.game;
+
 
 public class Knight extends Piece implements Cloneable {
 

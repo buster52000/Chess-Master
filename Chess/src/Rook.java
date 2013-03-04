@@ -1,4 +1,3 @@
-package chess.take3.game;
 
 public class Rook extends Piece implements Cloneable{
 

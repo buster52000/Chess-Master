@@ -1,4 +1,4 @@
-package chess.take3.game;
+
 
 import java.io.BufferedReader;
 import java.io.File;

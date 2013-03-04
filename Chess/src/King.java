@@ -1,9 +1,8 @@
-package chess.take3.game;
-
 public class King extends Piece implements Cloneable {
 
+	@SuppressWarnings("unused")
 	private Piece[] specialUndo = new Piece[2];
-	
+
 	public King(int _locationX, int _locationY, int _color) {
 		super(_locationX, _locationY, _color);
 	}
@@ -40,23 +39,55 @@ public class King extends Piece implements Cloneable {
 						|| (x == eX + 1 && y == eY - 1)
 						|| (x == eX - 1 && y == eY + 1)
 						|| (y == eY && x == eX + 3 && moves == 0 && x - 4 >= 0
-								&& board[x - 4][y] != null && board[x - 4][y]
-								.getMoves() == 0)
+								&& board[x - 4][y] != null
+								&& board[x - 4][y].getMoves() == 0
+								&& board[x - 3][y] == null
+								&& board[x - 2][y] == null && board[x - 1][y] == null)
 						|| (y == eY && x == eX - 2 && moves == 0 && x + 3 < 8
-								&& board[x + 3][y] != null && board[x + 3][y]
-								.getMoves() == 0)) {
+								&& board[x + 3][y] != null
+								&& board[x + 3][y].getMoves() == 0
+								&& board[x + 2][y] == null && board[x + 1][y] == null)) {
 					if (y == eY && x == eX + 3 && moves == 0 && x - 4 >= 0
 							&& board[x - 4][y] != null
-							&& board[x - 4][y].getMoves() == 0) {
+							&& board[x - 4][y].getMoves() == 0
+							&& board[x - 3][y] == null
+							&& board[x - 2][y] == null
+							&& board[x - 1][y] == null) {
 						if (Game.enableChange) {
+							Game.undoPRBool = true;
+							try {
+								Game.undoPR = (Piece) board[x - 4][y].clone();
+							} catch (CloneNotSupportedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							board[x - 4][y].moveTo(x - 2, y);
+							Game.undoPRLoc[0] = x - 4;
+							Game.undoPRLoc[1] = y;
+							Game.undoPRLoc[2] = x - 2;
+							Game.undoPRLoc[3] = y;
 							board[x - 2][y] = board[x - 4][y];
 							board[x - 4][y] = null;
 						}
 					}
 					if (y == eY && x == eX - 2 && moves == 0 && x + 3 < 8
 							&& board[x + 3][y] != null
-							&& board[x + 3][y].getMoves() == 0) {
+							&& board[x + 3][y].getMoves() == 0
+							&& board[x + 2][y] == null
+							&& board[x + 1][y] == null) {
 						if (Game.enableChange) {
+							Game.undoPRBool = true;
+							try {
+								Game.undoPR = (Piece) board[x + 3][y].clone();
+							} catch (CloneNotSupportedException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							board[x + 3][y].moveTo(x + 1, y);
+							Game.undoPRLoc[0] = x + 3;
+							Game.undoPRLoc[1] = y;
+							Game.undoPRLoc[2] = x + 1;
+							Game.undoPRLoc[3] = y;
 							board[x + 1][y] = board[x + 3][y];
 							board[x + 3][y] = null;
 						}

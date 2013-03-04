@@ -1,9 +1,9 @@
-package chess.take3.game;
 
-public class Piece {
+public class Piece implements Cloneable{
 
 	int locationX, locationY, color;
 	int moves;
+	public boolean special;
 	
 	public Piece(int _locationX, int _locationY, int _color) {
 		color = _color;
@@ -57,5 +57,9 @@ public class Piece {
 	
 	protected Object clone() throws CloneNotSupportedException {
         return super.clone();
+	}
+
+	public int getSpecialTurns() {
+		return 0;
 	}
 }

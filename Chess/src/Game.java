@@ -1,24 +1,22 @@
-package chess.take3.game;
-
 public class Game {
 
 	private Piece board[][] = new Piece[8][8];
-	int turn;
-	private Piece[] undo;
-	private int[] undo2;
+	public static int turn, turns, timePlayed;
+	private Piece[][] undo;
 	public static boolean undoPRBool;
-	public static Piece[] undoPR;
-	public static boolean enableChange;
+	public static Piece undoPR;
+	public static boolean enableChange, enablePawnChange;
 	public static int[] undoPRLoc;
 
 	public Game() {
 
 		turn = 0;
-		undo = new Piece[2];
-		undo2 = new int[4];
-		undoPR = new Piece[2];
+		turns = 0;
+		undo = new Piece[8][8];
+		undoPR = new Piece(0, 0, 0);
 		undoPRLoc = new int[4];
 		undoPRBool = false;
+		timePlayed = 0;
 
 	}
 
@@ -36,26 +34,30 @@ public class Game {
 
 	public boolean validEnd(int startX, int startY, int endX, int endY) {
 
-		return board[startX][startY].checkValid(endX, endY, board);
+		boolean temp = board[startX][startY].checkValid(endX, endY, board);
+
+		if (Game.enablePawnChange)
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (board[i][j] != null
+							&& board[i][j].getType().equals("Pawn"))
+						board[i][j].special = false;
+
+		return temp;
 
 	}
 
 	public void move(int startX, int startY, int endX, int endY) {
 
+		turns++;
 		UI.undo.setEnabled(true);
-		undo2[0] = startX;
-		undo2[1] = startY;
-		undo2[2] = endX;
-		undo2[3] = endY;
 		try {
-			if (board[startX][startY] != null)
-				undo[0] = (Piece) board[startX][startY].clone();
-			else
-				undo[0] = null;
-			if (board[endX][endY] != null)
-				undo[1] = (Piece) board[endX][endY].clone();
-			else
-				undo[1] = null;
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (board[i][j] != null)
+						undo[i][j] = (Piece) board[i][j].clone();
+					else
+						undo[i][j] = null;
 		} catch (CloneNotSupportedException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -84,34 +86,27 @@ public class Game {
 	}
 
 	public void undoMove() {
+		turns--;
 		turn = turn == 0 ? 1 : 0;
-		Piece[] undoPR = Game.undoPR;
+		Piece undoPR = Game.undoPR;
 		int[] undoPRLoc = Game.undoPRLoc;
 		boolean undoPRBool = Game.undoPRBool;
 		try {
-			if (undo[0] != null)
-				board[undo2[0]][undo2[1]] = (Piece) undo[0].clone();
-			else
-				board[undo2[0]][undo2[1]] = null;
-			if (undo[1] != null)
-				board[undo2[2]][undo2[3]] = (Piece) undo[1].clone();
-			else
-				board[undo2[2]][undo2[3]] = null;
+			for (int i = 0; i < 8; i++)
+				for (int j = 0; j < 8; j++)
+					if (undo[i][j] != null)
+						board[i][j] = (Piece) undo[i][j].clone();
+					else
+						board[i][j] = null;
 		} catch (CloneNotSupportedException e) {
 			e.printStackTrace();
 		}
-		UI.refreshBoard();
 		if (undoPRBool) {
 			try {
-				if (undoPR[0] != null)
-					board[undoPRLoc[0]][undoPRLoc[1]] = (Piece) undoPR[0]
-							.clone();
-				else
-					board[undoPRLoc[0]][undoPRLoc[1]] = null;
-				if (undoPR[1] != null)
-					board[undoPRLoc[2]][undoPRLoc[3]] = (Piece) undoPR[1]
-							.clone();
-				else
+				board[undoPRLoc[0]][undoPRLoc[1]] = (Piece) undoPR.clone();
+				if (board[undoPRLoc[2]][undoPRLoc[3]] != null
+						&& board[undoPRLoc[2]][undoPRLoc[3]].getType().equals(
+								"Rook"))
 					board[undoPRLoc[2]][undoPRLoc[3]] = null;
 			} catch (CloneNotSupportedException e) {
 				// TODO Auto-generated catch block
@@ -145,6 +140,10 @@ public class Game {
 		load.newGame();
 		board = load.getBoard();
 		turn = load.getTurn();
+	}
+
+	public void addTime() {
+		timePlayed += 125;
 	}
 
 	public Piece[][] getBoard() {

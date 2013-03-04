@@ -1,9 +1,10 @@
-package chess.take3.game;
+
 
 import java.awt.event.ActionEvent;
 
 import javax.swing.AbstractAction;
 
+@SuppressWarnings("serial")
 public class squareChoose extends AbstractAction {
 
 	private int x, y;

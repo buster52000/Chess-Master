@@ -1,5 +1,3 @@
-package chess.take3.game;
-
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -27,8 +25,8 @@ public class UI extends JFrame {
 
 	private static Game game;
 	private JFrame frame;
-	private JPanel mainPanel, panel2[][], panel1[];
-	private static JTextField textA;
+	private JPanel mainPanel, panel2[][], panel1[], textPanel;
+	private static JTextField textA, textB;
 	private static JButton button[][];
 	private static ImageIcon img[];
 	private squareChoose square[][];
@@ -51,8 +49,10 @@ public class UI extends JFrame {
 		panel2 = new JPanel[8][8];
 		panel1 = new JPanel[8];
 		button = new JButton[8][8];
+		textPanel = new JPanel();
 		img = new ImageIcon[13];
 		textA = new JTextField();
+		textB = new JTextField();
 		square = new squareChoose[8][8];
 		menuBar = new JMenuBar();
 		menu = new JMenu("Game");
@@ -108,7 +108,7 @@ public class UI extends JFrame {
 			}
 
 		});
-		
+
 		refresh.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent arg0) {
@@ -221,10 +221,16 @@ public class UI extends JFrame {
 			}
 			mainPanel.add(panel1[j]);
 		}
+		textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.X_AXIS));
 		textA.setSize(SIZE_X, 15);
+		textB.setSize(SIZE_X, 15);
+		textB.setBorder(BorderFactory.createLoweredBevelBorder());
 		textA.setBorder(BorderFactory.createLoweredBevelBorder());
+		textB.setEditable(false);
 		textA.setEditable(false);
-		mainPanel.add(textA);
+		textPanel.add(textA);
+		textPanel.add(textB);
+		mainPanel.add(textPanel);
 		frame.add(mainPanel);
 		for (int i = 0; i < 8; i++) {
 			for (int j = 0; j < 8; j++) {
@@ -253,6 +259,7 @@ public class UI extends JFrame {
 
 		@SuppressWarnings("unused")
 		UI ui = new UI();
+		undo.setEnabled(false);
 		boolean newGame = true;
 		while (newGame) {
 			game.newGame();
@@ -271,6 +278,7 @@ public class UI extends JFrame {
 						while (!clicked) {
 							try {
 								Thread.sleep(125);
+								game.addTime();
 							} catch (InterruptedException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -304,6 +312,7 @@ public class UI extends JFrame {
 					while (!clicked) {
 						try {
 							Thread.sleep(125);
+							game.addTime();
 						} catch (InterruptedException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
@@ -314,8 +323,9 @@ public class UI extends JFrame {
 					clicked = false;
 
 					H.puts("(" + endX + ", " + endY + ")");
-
+					Game.enablePawnChange = true;
 					move = game.validEnd(startX, startY, endX, endY);
+					Game.enablePawnChange = false;
 					if (move) {
 						if (check) {
 							if (!game.checkStillCheck(startX, startY, endX,

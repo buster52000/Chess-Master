@@ -1,4 +1,3 @@
-package chess.take3.game;
 
 public class Bishop extends Piece implements Cloneable{
 
@@ -20,7 +19,6 @@ public class Bishop extends Piece implements Cloneable{
 				if (Math.abs(eX - x) == Math.abs(eY - y)) {
 					boolean helper = true;
 					int bigX = Math.max(eX, x);
-					int bigY = Math.max(eY, y);
 					int smallX = Math.min(eX, x);
 					int smallY = Math.min(eY, y);
 					if ((y-eY)/(x-eX) == 1) {

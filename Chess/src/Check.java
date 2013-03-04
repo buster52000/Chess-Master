@@ -1,4 +1,4 @@
-package chess.take3.game;
+
 
 import javax.swing.JOptionPane;
 
